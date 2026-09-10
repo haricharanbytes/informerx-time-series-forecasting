@@ -1,0 +1,45 @@
+# Informer experiment configuration
+
+data:
+  dataset: ETTh1
+  csv_path: data/ETTh1.csv
+  target: OT              # target column to forecast
+  freq: h                 # h=hourly, t=minutely, d=daily (used for time features)
+  scale: true              # standardize features using train-set stats
+
+sequence:
+  seq_len: 96              # encoder input length
+  label_len: 48             # decoder "warm-start" tokens (overlap with encoder)
+  pred_len: 24              # forecast horizon
+
+model:
+  name: informer            # informer | transformer | lstm
+  enc_in: 7                 # number of input features (ETTh1 has 7 columns)
+  dec_in: 7
+  c_out: 1                  # output dimension (univariate OT forecast)
+  d_model: 512
+  n_heads: 8
+  e_layers: 2                # encoder layers
+  d_layers: 1                # decoder layers
+  d_ff: 2048
+  factor: 5                  # ProbSparse sampling factor (c in the paper)
+  dropout: 0.05
+  attn: prob                 # prob | full
+  activation: gelu
+  distil: true                # use attention distilling in encoder
+
+train:
+  batch_size: 32
+  learning_rate: 0.0001
+  epochs: 10
+  patience: 3                 # early stopping patience
+  seed: 42
+  device: cuda                # cuda | cpu
+  checkpoint_dir: checkpoints
+  num_workers: 2
+
+logging:
+  use_wandb: true
+  wandb_project: informer-forecasting
+  wandb_entity: haricharanbytes-personal   # your wandb personal team
+  run_name: null
