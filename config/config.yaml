@@ -31,7 +31,7 @@ model:
 train:
   batch_size: 32
   learning_rate: 0.0001
-  epochs: 10
+  epochs: 50
   patience: 3                 # early stopping patience
   seed: 42
   device: cuda                # cuda | cpu
